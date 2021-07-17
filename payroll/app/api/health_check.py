@@ -1,4 +1,4 @@
-# payroll/app/api/ping.py
+# payroll/app/api/health_check.py
 
 
 from fastapi import APIRouter, Depends
@@ -8,10 +8,10 @@ from app.config import get_settings, Settings
 router = APIRouter()
 
 
-@router.get("/v1/ping", status_code=200, description="Health check")
+@router.get("/v1/health", status_code=200, description="Health check")
 async def pong(settings: Settings = Depends(get_settings)):
     return {
-        "ping": "pong!",
+        "status": "live",
         "environment": settings.environment,
         "testing": settings.testing,
     }

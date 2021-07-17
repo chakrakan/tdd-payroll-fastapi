@@ -11,6 +11,7 @@ tortoise-orm = "*"
 aerich = "*"
 pytest = "*"
 requests = "*"
+python-multipart = "*"
 
 [dev-packages]
 flake8 = "*"
