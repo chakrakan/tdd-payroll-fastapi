@@ -7,6 +7,8 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 asyncpg = "*"
+tortoise-orm = "*"
+aerich = "*"
 
 [dev-packages]
 flake8 = "*"
