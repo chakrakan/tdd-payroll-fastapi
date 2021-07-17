@@ -12,7 +12,7 @@ ____    __    ____  ___   ____    ____  _______     ___      .______   .______  
 echo 'Built by Kanisk Chakraborty <dev.kanisk@gmail.com>'
 echo 'Waiting for postgres...'
 
-while ! nc -z web-db 5432; do
+while ! nc -z payroll-db 5432; do
   sleep 0.1
 done
 

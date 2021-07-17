@@ -1,6 +1,6 @@
 # Payroll System
 
-A sample payroll processing application built using Django
+A sample payroll processing application built using FastAPI
 
 1. Instructions on how to build/run your application
 2. Answers to the following questions:
