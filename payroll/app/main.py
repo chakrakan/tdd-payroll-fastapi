@@ -30,7 +30,7 @@ register_tortoise(
 )
 
 
-@app.get("/ping")
+@app.get("/ping", status_code=200, description="Health check")
 async def ping(settings: Settings = Depends(get_settings)):
     return {
         "ping": "pong!",

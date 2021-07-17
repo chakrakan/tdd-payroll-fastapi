@@ -9,6 +9,8 @@ uvicorn = "*"
 asyncpg = "*"
 tortoise-orm = "*"
 aerich = "*"
+pytest = "*"
+requests = "*"
 
 [dev-packages]
 flake8 = "*"
