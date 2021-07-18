@@ -4,7 +4,12 @@ from tortoise.models import Model
 from tortoise import fields
 
 
-class JobGroup(Model):
+class TimestampMixin:
+    created_at = fields.DatetimeField(auto_now_add=True)
+    modified_at = fields.DatetimeField(auto_now=True)
+
+
+class JobGroup(TimestampMixin, Model):
     """
     JobGroup model for the DB
 
@@ -14,16 +19,16 @@ class JobGroup(Model):
 
     group = fields.CharField(max_length=1, pk=True)
     hourly_rate = fields.DecimalField(max_digits=8, decimal_places=2, null=False)
-    created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Group {self.group}, Hourly Rate: ${self.hourly_rate:.2f}"
 
     class Meta:
         table = "job_group"
+        unique_together = ("group", "hourly_rate")
 
 
-class TimeReport(Model):
+class TimeReport(TimestampMixin, Model):
     """
     Time Report class to contain parsed CSV info
 
@@ -38,7 +43,6 @@ class TimeReport(Model):
         "models.Employee", related_name="employee_reports"
     )
     job_group = fields.ForeignKeyField("models.JobGroup", related_name="group_reports")
-    created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
         return (
@@ -49,9 +53,10 @@ class TimeReport(Model):
 
     class Meta:
         table = "time_report"
+        ordering = ["date"]
 
 
-class Employee(Model):
+class Employee(TimestampMixin, Model):
     """
     An extensible class to manage Employees in the DB
 
@@ -61,7 +66,6 @@ class Employee(Model):
 
     id = fields.IntField(pk=True)
     job_group = fields.ForeignKeyField("models.JobGroup", related_name="job_group")
-    created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Employee ID: {self.id}"

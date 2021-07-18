@@ -12,10 +12,10 @@ router = APIRouter()
     "/v1/upload",
     status_code=status.HTTP_202_ACCEPTED,
     response_model=UploadResponseSchema,
-    tags=["upload"],
+    tags=["Upload Report"],
     description="Route to upload payroll CSV file",
 )
-async def upload_csv(
+async def upload_report(
     background_tasks: BackgroundTasks,
     response: Response,
     csv_file: UploadFile = File(...),

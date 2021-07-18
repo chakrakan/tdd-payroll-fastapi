@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get(
     "/v1/report",
     status_code=status.HTTP_200_OK,
-    tags=["report"],
+    tags=["Generate Report"],
     description="Route to retrieve JSON data for all TimeReport data uploaded",
 )
 async def generate_report(background_task: BackgroundTasks):

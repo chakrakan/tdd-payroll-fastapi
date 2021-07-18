@@ -4,7 +4,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import health_check, upload
+from app.api import health_check, upload, generate_report
 from app.db import init_db
 
 log = logging.getLogger("uvicorn")
@@ -36,6 +36,7 @@ def create_application() -> FastAPI:
 
     app.include_router(health_check.router)
     app.include_router(upload.router)
+    app.include_router(generate_report.router)
 
     return app
 
