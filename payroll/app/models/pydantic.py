@@ -4,6 +4,7 @@
 from pydantic.main import BaseModel
 from tortoise.contrib.pydantic import pydantic_model_creator
 from app.models.tortoise import Employee, JobGroup
+from typing import Union
 
 
 class UploadResponseSchema(BaseModel):
@@ -15,7 +16,7 @@ class UploadResponseSchema(BaseModel):
     """
 
     file_id: int
-    message: str
+    message: Union[str, dict]
 
 
 # create pydantic schemas with tortoise ORM helper
