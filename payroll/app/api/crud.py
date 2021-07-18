@@ -8,7 +8,6 @@ NAMING_CONVENTION = r"time-report-\d+\..*"
 
 ERRORS = {
     "DUPLICATE_REPORT": "Error: Duplicate report",
-    "INCORRECT_EXT": "Error: Incorrect file extention",
 }
 
 
