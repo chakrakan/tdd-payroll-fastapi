@@ -33,16 +33,12 @@ async def upload_csv(
         [type]: [description]
     """
     message = f"{csv_file.filename} upload accepted and is being processed!"
-    file_id = await validate_file(csv_file.filename, csv_file.content_type)
+    (file_id, ERRORS) = await validate_file(csv_file.filename, csv_file.content_type)
 
     if file_id == 0:
         response.status_code = status.HTTP_409_CONFLICT
-        message = (
-            f"{csv_file.filename} is not a valid text/csv file. "
-            f"This API only supports text/csv files!"
-        )
-
-    # if valid csv, check if DB already has existing ID
+        # all errors begin with Error: and end in new line
+        message = "\n".join(ERRORS)
 
     # begin processing in the background to add to DB if not prev conditions
     background_tasks.add_task(process_file, csv_file)

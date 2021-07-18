@@ -12,10 +12,6 @@ from fastapi.datastructures import UploadFile
 FILE_EXT = {".csv"}
 NAMING_CONVENTION = re.compile("time-report-\\d+")
 
-ERRORS = {
-    "DUPLICATE_REPORT": "Error: Duplicate report",
-}
-
 
 async def process_file(csv_file: UploadFile):
     """
@@ -41,7 +37,7 @@ async def generate_report_service():
     print("Report Generated!")
 
 
-async def validate_file(file_with_ext: str, content_type: str) -> int:
+async def validate_file(file_with_ext: str, content_type: str) -> tuple:
     """
     File validator
 
@@ -52,11 +48,33 @@ async def validate_file(file_with_ext: str, content_type: str) -> int:
     Returns:
         int: [description]
     """
+
+    ERRORS = []
+
     (name, ext) = (splitext(file_with_ext)[0], splitext(file_with_ext)[-1])
+
     is_valid_type = content_type == "text/csv" and ext in FILE_EXT
+    if not is_valid_type:
+        ERRORS.append(
+            (
+                f"Error: {file_with_ext} is not a valid text/csv file. "
+                f"This API only supports text/csv files."
+            )
+        )
+
     is_valid_name = bool(NAMING_CONVENTION.search(name))
+    if not is_valid_name:
+        ERRORS.append(
+            (
+                f"Error: {file_with_ext} does not have the right naming convention. "
+                f"This API only supports CSV files with strict `time-report-[0-9]+` "
+                f"based naming where the digits represent the report ID."
+            )
+        )
     file_id = int(name.split("-")[2]) if is_valid_type and is_valid_name else 0
+
+    # check if file_id alreayd in database
 
     print(f"Validate file: {name}, {ext}, {is_valid_name}, {is_valid_type}, {file_id}")
 
-    return file_id
+    return (file_id, ERRORS)
