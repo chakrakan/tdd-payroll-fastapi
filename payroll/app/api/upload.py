@@ -38,7 +38,7 @@ async def upload_csv(
     ext = splitext(csv_file.filename)[-1]
 
     # file MIME type must be csv
-    if csv_file.content_type != "text/csv" and ext in FILE_EXT:
+    if csv_file.content_type != "text/csv" and ext not in FILE_EXT:
         response.status_code = status.HTTP_409_CONFLICT
         message = (
             f"{csv_file.filename} is not a valid text/csv file."
