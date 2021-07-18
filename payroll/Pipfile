@@ -12,6 +12,7 @@ aerich = "*"
 pytest = "*"
 requests = "*"
 python-multipart = "*"
+python-magic = "*"
 
 [dev-packages]
 flake8 = "*"

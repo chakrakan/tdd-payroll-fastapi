@@ -77,8 +77,8 @@ async def validate_file(file_with_ext: str, content_type: str) -> tuple:
 
     print(
         (
-            f"Validate file: {name}, {ext}, {is_valid_name}, {is_valid_type}, "
-            f"{file_id}, {file_in_db}"
+            f"Validate file: {content_type}, {name}, {ext}, {is_valid_name}, "
+            f"{is_valid_type}, {file_id}, {file_in_db}"
         )
     )
 

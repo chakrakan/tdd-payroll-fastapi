@@ -15,6 +15,7 @@ WORKDIR ${WORK_DIR}
 # install system dependencies
 RUN apt-get update \
     && apt-get -y install netcat gcc \
+    && apt-get -y install libmagic1 \
     && apt-get clean
 
 # install pipenv
