@@ -1,8 +1,7 @@
 # payroll/app/api/upload.py
 
-from os.path import splitext
 from fastapi import APIRouter, File, UploadFile, status, BackgroundTasks, Response
-from app.api.crud import process_file, FILE_EXT
+from app.api.crud import process_file, validate_file
 from app.models.pydantic import UploadResponseSchema
 
 
@@ -34,19 +33,17 @@ async def upload_csv(
         [type]: [description]
     """
     message = f"{csv_file.filename} upload accepted and is being processed!"
+    file_id = await validate_file(csv_file.filename, csv_file.content_type)
 
-    ext = splitext(csv_file.filename)[-1]
-
-    # file MIME type must be csv
-    if csv_file.content_type != "text/csv" and ext not in FILE_EXT:
+    if file_id == 0:
         response.status_code = status.HTTP_409_CONFLICT
         message = (
-            f"{csv_file.filename} is not a valid text/csv file."
+            f"{csv_file.filename} is not a valid text/csv file. "
             f"This API only supports text/csv files!"
         )
 
     # if valid csv, check if DB already has existing ID
 
     # begin processing in the background to add to DB if not prev conditions
-    background_tasks.add_task(process_file, csv_file.file)
-    return message
+    background_tasks.add_task(process_file, csv_file)
+    return UploadResponseSchema(file_id=file_id, message=message)

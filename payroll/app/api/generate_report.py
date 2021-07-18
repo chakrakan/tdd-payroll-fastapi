@@ -23,4 +23,6 @@ async def generate_report(background_task: BackgroundTasks):
     Returns:
         [type]: [description]
     """
+    message = "Report Generated!"
     background_task.add_task(generate_report_service)
+    return message
