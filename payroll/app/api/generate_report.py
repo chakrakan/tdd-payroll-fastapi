@@ -3,7 +3,7 @@
 
 from fastapi import APIRouter, status, BackgroundTasks
 
-from app.api.crud import generate_report_service
+from app.api.services import generate_report_service
 
 
 router = APIRouter()

@@ -6,13 +6,13 @@ import magic
 mime = magic.Magic(mime=True)
 
 
-def test_file_upload_valid(test_app, change_test_dir):
+def test_file_upload_valid(test_app_with_db, change_test_dir):
     # Given
     change_test_dir
     filename = "time-report-2.csv"
 
     # When
-    response = test_app.post(
+    response = test_app_with_db.post(
         "v1/upload", files={"csv_file": (filename, open(filename, "rb"), "text/csv")}
     )
 

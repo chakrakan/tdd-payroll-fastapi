@@ -5,7 +5,7 @@ from os.path import splitext
 
 from fastapi.datastructures import UploadFile
 
-# from app.models.tortoise import TimeReport
+from app.models.tortoise import TimeReport
 
 # extendable file types and const naming convention
 
@@ -71,8 +71,8 @@ async def validate_file(file_with_ext: str, content_type: str) -> tuple:
     file_id = int(name.split("-")[2]) if is_valid_type and is_valid_name else 0
 
     # check if file_id alreayd in database
-    file_in_db = file_id != 0  # and await TimeReport.filter(id=file_id).exists()
-    if not file_in_db:
+    file_in_db = file_id != 0 and await TimeReport.filter(id=file_id).exists()
+    if file_in_db:
         ERRORS["DUPLICATE_REPORT"] = f"Error: {file_with_ext} already exists in DB."
 
     print(
