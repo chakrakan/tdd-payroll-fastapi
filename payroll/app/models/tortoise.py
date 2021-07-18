@@ -39,14 +39,14 @@ class TimeReport(TimestampMixin, Model):
     report_id = fields.IntField(null=False)
     date = fields.DateField(null=False)
     hours_worked = fields.DecimalField(max_digits=4, decimal_places=2, null=False)
-    employee = fields.IntField(null=False)
+    employee_id = fields.IntField(null=False)
     job_group = fields.CharField(null=False, max_length=1)
 
     def __str__(self):
         return (
             f"Report ID: {self.report_id}\n"
             f"Date: {self.date} Hours Worked: {self.hours_worked}\n"
-            f"Employee ID: {self.employee} Job Group: {self.job_group}"
+            f"Employee ID: {self.employee_id} Job Group: {self.job_group}"
         )
 
     class Meta:

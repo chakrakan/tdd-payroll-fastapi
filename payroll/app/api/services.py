@@ -1,7 +1,9 @@
 # payroll/app/api/crud.py
 
+from decimal import Decimal
 import re
 from os.path import splitext
+from datetime import datetime
 
 from fastapi.datastructures import UploadFile
 
@@ -13,7 +15,7 @@ FILE_EXT = {".csv"}
 NAMING_CONVENTION = re.compile("time-report-\\d+$")
 
 
-async def process_file(csv_file: UploadFile):
+async def process_file(uploaded_file: UploadFile):
     """
     Main file processing handler
 
@@ -23,8 +25,27 @@ async def process_file(csv_file: UploadFile):
     Returns:
         int: [description]
     """
+    csv_byte_literal = await uploaded_file.read()
+    data = csv_byte_literal.decode("utf-8").splitlines()
+    list_of_report_objs = []
+    if len(data) > 1:
+        for line in data[1:]:
+            data_row = line.split(",")
+            date_obj = datetime.strptime(data_row[0], "%d/%m/%y")
+            list_of_report_objs.append(
+                TimeReport(
+                    date=date_obj,
+                    hours_worked=Decimal(data_row[1]),
+                    employee_id=int(data_row[2], job_group=data_row[3]),
+                )
+            )
 
-    print(f"Processing {csv_file.filename} complete!")
+        await TimeReport.bulk_create(list_of_report_objs)
+    else:
+        print(f"{uploaded_file.filename} has 0 data rows. Abort processing")
+
+    await uploaded_file.close()
+    print(f"Processing {uploaded_file.filename} complete!")
 
 
 async def generate_report_service():
