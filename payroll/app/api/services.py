@@ -29,7 +29,8 @@ async def process_file(csv_file: UploadFile):
 
 async def generate_report_service():
     """
-    Report generator handler
+    Report generator handler, can be extended in the future
+    if the GET request supports time_periods to limit querying entire DB
 
     Returns:
         dict: [description]

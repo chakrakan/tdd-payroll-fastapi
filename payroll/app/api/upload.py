@@ -37,9 +37,10 @@ async def upload_report(
 
     if file_id == 0 or len(ERRORS) > 0:
         response.status_code = status.HTTP_409_CONFLICT
-        # all errors begin with Error: and end in new line
+        # message in our UploadReponseSchema is a Union of dict and str so we can simply
+        # pass ERRORS dict
         message = ERRORS
     else:
         background_tasks.add_task(process_file, csv_file)
 
-    return UploadResponseSchema(file_id=file_id, message=message)
+    return {"file_id": file_id, "message": message}
