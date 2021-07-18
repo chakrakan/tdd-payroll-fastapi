@@ -13,7 +13,7 @@ class JobGroup(Model):
     """
 
     group = fields.CharField(max_length=1, pk=True)
-    hourly_rate = fields.DecimalField(max_digits=7, decimal_places=2, null=False)
+    hourly_rate = fields.DecimalField(max_digits=8, decimal_places=2, null=False)
     created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
@@ -35,9 +35,9 @@ class TimeReport(Model):
     date = fields.DateField(null=False)
     hours_worked = fields.DecimalField(max_digits=4, decimal_places=2, null=False)
     employee_id = fields.ForeignKeyField(
-        "models.Employee", related_name="employee_report"
+        "models.Employee", related_name="employee_reports"
     )
-    job_group = fields.ForeignKeyField("models.JobGroup", related_name="group_report")
+    job_group = fields.ForeignKeyField("models.JobGroup", related_name="group_reports")
     created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
@@ -60,6 +60,7 @@ class Employee(Model):
     """
 
     id = fields.IntField(pk=True)
+    job_group = fields.ForeignKeyField("models.JobGroup", related_name="job_group")
     created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
