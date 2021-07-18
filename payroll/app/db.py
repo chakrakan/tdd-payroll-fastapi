@@ -10,7 +10,7 @@ from tortoise.contrib.fastapi import register_tortoise
 
 log = logging.getLogger("uvicorn")
 
-# configure Tortoise ORM to use aerich (db migration tool akin to Django ORM)
+# configure Tortoise ORM to use aerich in dev (db migration tool akin to Django ORM)
 # https://tortoise-orm.readthedocs.io/en/latest/migration.html
 
 TORTOISE_ORM = {

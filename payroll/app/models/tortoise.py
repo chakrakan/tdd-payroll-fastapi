@@ -5,7 +5,7 @@ from tortoise import fields
 
 
 class JobGroup(Model):
-    """JobGroup enum mapping the 2 existing job groups with the ability to extend
+    """JobGroup model for the DB
 
     Args:
         Model ([Model]): [description]

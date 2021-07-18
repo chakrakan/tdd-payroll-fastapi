@@ -1,12 +1,22 @@
 # payroll/app/api/crud.py
 
+from tempfile import SpooledTemporaryFile
+from app.models.tortoise import TimeReport
 
-# from app.models.pydantic import time_report_pydantic
-from fastapi import UploadFile
+FILE_EXT = {"csv"}
+NAMING_CONVENTION = r"time-report-\d+\..*"
 
-# from app.models.tortoise import TimeReport
+ERRORS = {
+    "DUPLICATE_REPORT": "Error: Duplicate report",
+    "INCORRECT_EXT": "Error: Incorrect file extention",
+}
 
 
-async def process_file(file: UploadFile) -> str:
-    report_id = file.filename.split("-")[2]
-    return report_id
+async def process_file(csv_file: SpooledTemporaryFile) -> int:
+    time_report = TimeReport()
+    return time_report.id
+
+
+async def generate_report_service() -> dict:
+    # logic to generate report
+    return
