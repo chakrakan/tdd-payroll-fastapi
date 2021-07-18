@@ -14,6 +14,13 @@ def get_settings_override():
     return Settings(testing=1, database_url=os.environ.get("DATABASE_TEST_URL"))
 
 
+@pytest.fixture(scope="function")
+def change_test_dir(request):
+    os.chdir(request.fspath.dirname)
+    yield
+    os.chdir(request.config.invocation_dir)
+
+
 @pytest.fixture(scope="module")
 def test_app():
     # set up
