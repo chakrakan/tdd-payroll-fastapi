@@ -1,4 +1,4 @@
-# project/app/api/upload.py
+# payroll/app/api/upload.py
 
 from os.path import splitext
 from fastapi import APIRouter, File, UploadFile, status, BackgroundTasks, Response
@@ -13,6 +13,7 @@ router = APIRouter()
     "/v1/upload",
     status_code=status.HTTP_202_ACCEPTED,
     response_model=UploadResponseSchema,
+    tags=["upload"],
     description="Route to upload payroll CSV file",
 )
 async def upload_csv(
@@ -20,11 +21,14 @@ async def upload_csv(
     response: Response,
     csv_file: UploadFile = File(...),
 ):
-    """Endpoint to upload file. UploadFile type creates a background task to process
+    """
+    Endpoint to upload file. UploadFile type creates a background task to process
     the file as spooled memory to read and process efficiently.
 
     Args:
-        file (UploadFile, optional): [description]. Defaults to File(...).
+        background_tasks (BackgroundTasks): [description]
+        response (Response): [description]
+        csv_file (UploadFile, optional): [description]. Defaults to File(...).
 
     Returns:
         [type]: [description]

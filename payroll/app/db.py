@@ -25,7 +25,8 @@ TORTOISE_ORM = {
 
 
 def init_db(app: FastAPI) -> None:
-    """Function to help generate and initialize DB
+    """
+    Function to help generate and initialize DB
 
     Args:
         app (FastAPI): [FastAPI instance]
@@ -40,7 +41,8 @@ def init_db(app: FastAPI) -> None:
 
 
 async def generate_schema() -> None:
-    """Applying migrations each time is slow and tedious, and sometime we only need
+    """
+    Applying migrations each time is slow and tedious, and sometime we only need
     the schema generated. Thus this is the helper function to generate schemas
     standalone.
     """
@@ -56,4 +58,7 @@ async def generate_schema() -> None:
 
 
 if __name__ == "__main__":
+    """
+    Standalone runner - docker-compose exec payroll python app/db.py
+    """
     run_async(generate_schema())

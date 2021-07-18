@@ -5,7 +5,8 @@ from tortoise import fields
 
 
 class JobGroup(Model):
-    """JobGroup model for the DB
+    """
+    JobGroup model for the DB
 
     Args:
         Model ([Model]): [description]
@@ -23,7 +24,8 @@ class JobGroup(Model):
 
 
 class TimeReport(Model):
-    """Time Report class to contain parsed CSV info
+    """
+    Time Report class to contain parsed CSV info
 
     Args:
         Model ([type]): [description]
@@ -50,7 +52,8 @@ class TimeReport(Model):
 
 
 class Employee(Model):
-    """An extensible class to manage Employees
+    """
+    An extensible class to manage Employees in the DB
 
     Args:
         Model ([Model]): [Base model class from the ORM]

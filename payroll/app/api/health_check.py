@@ -8,8 +8,13 @@ from app.config import get_settings, Settings
 router = APIRouter()
 
 
-@router.get("/v1/health", status_code=status.HTTP_200_OK, description="Health check")
-async def pong(settings: Settings = Depends(get_settings)):
+@router.get(
+    "/v1/health",
+    status_code=status.HTTP_200_OK,
+    tags=["health"],
+    description="Health check",
+)
+async def ping(settings: Settings = Depends(get_settings)):
     return {
         "status": "live",
         "environment": settings.environment,

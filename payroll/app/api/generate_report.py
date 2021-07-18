@@ -1,4 +1,4 @@
-# project/app/api/generate_report.py
+# payroll/app/api/generate_report.py
 
 
 from fastapi import APIRouter, status, BackgroundTasks
@@ -12,10 +12,12 @@ router = APIRouter()
 @router.get(
     "/v1/report",
     status_code=status.HTTP_200_OK,
+    tags=["report"],
     description="Route to retrieve JSON data for all TimeReport data uploaded",
 )
 async def generate_report(background_task: BackgroundTasks):
-    """Endpoint to retrieve and generate a report for all employees and for all
+    """
+    Endpoint to retrieve and generate a report for all employees and for all
     time periods uploaded thus far to the system.
 
     Returns:

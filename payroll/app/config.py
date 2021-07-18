@@ -11,7 +11,8 @@ log = logging.getLogger("uvicorn")
 
 
 class Settings(BaseSettings):
-    """Class for pydantic settings management for project
+    """
+    Class for pydantic settings management for project
 
     Args:
         BaseSettings ([BaseSettings]): [description]

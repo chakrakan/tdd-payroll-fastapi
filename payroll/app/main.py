@@ -18,6 +18,12 @@ origins = [
 
 
 def create_application() -> FastAPI:
+    """
+    Create base FastAPI app with CORS middlewares and routes loaded
+
+    Returns:
+        FastAPI: [description]
+    """
     app = FastAPI(title="Wave Payroll")
 
     app.add_middleware(
@@ -35,6 +41,9 @@ def create_application() -> FastAPI:
 
 
 app = create_application()
+
+# use the fast API (Starlette's) event handlers to startup and shutdown app
+# https://www.starlette.io/events/
 
 
 @app.on_event("startup")
