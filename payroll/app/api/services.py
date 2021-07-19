@@ -4,9 +4,13 @@ from decimal import Decimal
 import re
 from os.path import splitext
 from datetime import datetime
-from fastapi.datastructures import UploadFile
 
-from app.models.tortoise import Employee, JobGroup, TimeReport
+from typing import List
+from fastapi.datastructures import UploadFile
+import calendar
+
+from app.models.tortoise import Employee, EmployeeReport, JobGroup, TimeReport
+from tortoise.functions import Sum
 
 # extendable file types and const naming convention
 
@@ -30,45 +34,93 @@ async def process_file(uploaded_file: UploadFile, file_id: int):
         csv_byte_literal = await uploaded_file.read()
         data = csv_byte_literal.decode("utf-8").splitlines()
 
-        # consts
-        list_of_report_objs = []
+        # consts and holders
+        time_reports = []
+        employee_reports = []
+        start_day = 1
+        end_day = 15
 
         if len(data) > 1:
 
-            # create data in DB + map them up
+            # create data in DB + map them up in O(N) time where
+            # N is number of CSV rows
 
             for line in data[1:]:
                 data_row = line.split(",")
-                (day, month, year) = data_row[0].split("/")
-                formatted_date = datetime(int(year), int(month), int(day))
-                formatted_hrs = Decimal(data_row[1])
+                formatted_date = await parse_date(data_row[0].strip())
+                month_range = calendar.monthrange(
+                    formatted_date.year, formatted_date.month
+                )[1]
+
+                start_day = start_day if formatted_date.day <= 15 else 16
+                end_day = end_day if formatted_date.day <= 15 else month_range
+
+                formatted_start_date = datetime(
+                    formatted_date.year, formatted_date.month, start_day
+                )
+                formatted_end_date = datetime(
+                    formatted_date.year, formatted_date.month, end_day
+                )
+
+                formatted_hrs = Decimal(data_row[1].strip())
 
                 # get or create a job_group or employee dynamically
-                db_job_id = await get_job_group(data_row[3])
-                db_employee_id = await get_employee(int(data_row[2]), db_job_id)
+                db_job = await get_job_group(data_row[3].strip())
+                db_employee = await get_employee(int(data_row[2].strip()), db_job.pk)
 
-                list_of_report_objs.append(
+                time_reports.append(
                     TimeReport(
                         report_id=file_id,
                         date=formatted_date,
                         hours_worked=formatted_hrs,
-                        employee_id=db_employee_id,
-                        job_group_id=db_job_id,
+                        employee_id=db_employee.pk,
+                        job_group_id=db_job.pk,
+                    )
+                )
+
+                amount_to_pay = formatted_hrs * db_job.hourly_rate
+
+                employee_reports.append(
+                    EmployeeReport(
+                        report_employee_id=db_employee.pk,
+                        start_date=formatted_start_date,
+                        end_date=formatted_end_date,
+                        amount_paid=amount_to_pay,
                     )
                 )
 
             # upload/commit and bulk create all time_reports
-            await TimeReport.bulk_create(list_of_report_objs)
+            await TimeReport.bulk_create(time_reports)
+            await EmployeeReport.bulk_create(employee_reports)
+            await uploaded_file.close()  # close file after DB data dump
 
-            # process payroll in DB
-
-            await uploaded_file.close()
             print(f"Processing {uploaded_file.filename} complete!")
         else:
             print(f"{uploaded_file.filename} has 0 data rows. Abort processing")
 
     except Exception as e:
         print(f"Error in proces_file: {e}")
+
+
+async def get_employee_report(emp_id: int) -> List:
+    employee_reports = (
+        await EmployeeReport.annotate(sum=Sum("amount_paid"))
+        .group_by("report_employee_id", "start_date", "end_date")
+        .filter(report_employee_id=emp_id)
+        .order_by("start_date")
+        .values_list("report_employee_id", "start_date", "end_date", "sum")
+    )
+
+    return employee_reports
+
+
+async def parse_date(date_string: str):
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y"):
+        try:
+            return datetime.strptime(date_string, fmt)
+        except ValueError:
+            pass
+    raise ValueError("Error: no valid date format found")
 
 
 async def generate_report_service() -> tuple:
@@ -84,9 +136,27 @@ async def generate_report_service() -> tuple:
 
     try:
         # check if there are any values in our table
-        reports_from_db = await TimeReport.all().order_by("date")
-        if len(reports_from_db) > 0:
-            print(reports_from_db)
+        total_employees = await Employee.all()
+        num_employees = len(total_employees)
+        print(f"DB has {num_employees} employees, gathering reports, please wait...")
+        if num_employees > 0:
+            employee_reports = []
+            for employee in total_employees:
+                # get report and store
+                employee_reports.extend(await get_employee_report(employee.pk))
+
+            for report in employee_reports:
+                report_obj = {
+                    "employeeId": str(report[0]),
+                    "payPeriod": {
+                        "startDate": report[1].strftime("%d/%m/%Y"),
+                        "endDate": report[2].strftime("%d/%m/%Y"),
+                    },
+                    "amountPaid": f"${report[3]:.2f}",
+                }
+                # append to main JSON response
+                REPORT["payrollReport"]["employeeReports"].append(report_obj)
+
             print("Report Generated!")
         else:
             ERRORS["NO_DATA"] = (
@@ -100,7 +170,7 @@ async def generate_report_service() -> tuple:
     return (REPORT, ERRORS)
 
 
-async def get_job_group(group_name: str) -> str:
+async def get_job_group(group_name: str) -> JobGroup:
     """To demonstrate job_group modularity
 
     Args:
@@ -114,12 +184,12 @@ async def get_job_group(group_name: str) -> str:
                 group=group_name, hourly_rate=Decimal(JOB_GROUPS[group_name])
             )
         )
-        return created_group[0].pk
+        return created_group[0]
     except Exception as e:
-        print(f"Error creating get_job_group: {e}")
+        print(f"Error in get_job_group: {e}")
 
 
-async def get_employee(employee_id: int, job_group: str) -> int:
+async def get_employee(employee_id: int, job_group: str) -> Employee:
     """To demonstrate employee modularity
 
     Args:
@@ -129,7 +199,7 @@ async def get_employee(employee_id: int, job_group: str) -> int:
         created_employee = await Employee.get_or_create(
             id=employee_id, job_group_id=job_group
         )
-        return created_employee[0].id
+        return created_employee[0]
     except Exception as e:
         print(f"Error in get_employee: {e}")
 

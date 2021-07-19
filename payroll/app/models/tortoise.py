@@ -54,29 +54,6 @@ class TimeReport(TimestampMixin, Model):
         ordering = ["date"]
 
 
-# class EmployeeReport(TimestampMixin, Model):
-#     """
-#     More Specific EmployeeReport class to generate report structure from
-
-#     Args:
-#         Model ([type]): [description]
-#     """
-
-#     employee = fields.IntField(null=False, pk=True)
-#     job_group = fields.CharField(null=False, max_length=1)
-
-#     def __str__(self):
-#         return (
-#             f"Report ID: {self.id}\n"
-#             f"Date: {self.date} Hours Worked: {self.hours_worked}\n"
-#             f"Employee ID: {self.employee_id} Job Group: {self.job_group}"
-#         )
-
-#     class Meta:
-#         table = "time_report"
-#         ordering = ["date"]
-
-
 class Employee(TimestampMixin, Model):
     """
     An extensible class to manage Employees in the DB
@@ -93,3 +70,32 @@ class Employee(TimestampMixin, Model):
 
     class Meta:
         table = "employee"
+
+
+class EmployeeReport(TimestampMixin, Model):
+    """
+    More Specific EmployeeReport class to generate report structure from
+
+    Args:
+        Model ([type]): [description]
+    """
+
+    report_employee = fields.ForeignKeyField(
+        "models.Employee",
+        related_name="employee_reports",
+    )
+    start_date = fields.DatetimeField(null=False)
+    end_date = fields.DatetimeField(null=False)
+    amount_paid = fields.DecimalField(max_digits=14, decimal_places=2, null=False)
+
+    def __str__(self):
+        return (
+            f"Report:\n"
+            f"Start/End Date: {self.start_date}/{self.end_date}\n"
+            f"Employee ID: {self.report_employee.pk} "
+            f"Amount Paid: ${self.amount_paid:.2f}"
+        )
+
+    class Meta:
+        table = "employee_report"
+        ordering = ["start_date"]
