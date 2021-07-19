@@ -6,16 +6,16 @@ A sample payroll processing application built using FastAPI
 
 #### Deployed Instance
 
-This API and PostgresDB is deployed on a free Heroku dyno - visit [`https://cryptic-peak-99939.herokuapp.com/docs`] to interact with the API directly from the Swagger UI specs without installing anything locally!
+This API and PostgresDB is deployed on a free Heroku dyno - visit [here](https://cryptic-peak-99939.herokuapp.com/docs) to interact with the API directly from the Swagger UI specs without installing anything locally!
 
 `P.S. free Dyno's are by default asleep after 30 mins of inactivity and will require a cold start for the first request, so I highly suggest visiting the docs page first to "boot" up the dyno before hitting the other endpoints`
 
 Routes
 
-`https://cryptic-peak-99939.herokuapp.com/docs` - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
-`https://cryptic-peak-99939.herokuapp.com/v1/health` - simple `GET` endpoint for health check  
-`https://cryptic-peak-99939.herokuapp.com/v1/upload` - csv_file `POST` upload route  
-`https://cryptic-peak-99939.herokuapp.com/v1/report` - `GET` request to retrieve report of all uploaded data
+https://cryptic-peak-99939.herokuapp.com/docs - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
+https://cryptic-peak-99939.herokuapp.com/v1/health - simple `GET` endpoint for health check  
+https://cryptic-peak-99939.herokuapp.com/v1/upload - csv_file `POST` upload route  
+https://cryptic-peak-99939.herokuapp.com/v1/report - `GET` request to retrieve report of all uploaded data
 
 #### 🐳 Docker
 
@@ -32,10 +32,10 @@ The API is referred as `payroll` and the PgSQL DB is `payroll-db` with tables `p
 
 Routes
 
-`http://localhost:8004/docs` - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
-`http://localhost:8004/v1/health` - simple health check  
-`http://localhost:8004/v1/upload` - csv_file post upload route  
-`http://localhost:8004/v1/report` - get request to retrieve report
+http://localhost:8004/docs - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
+http://localhost:8004/v1/health - simple health check  
+http://localhost:8004/v1/upload - csv_file post upload route  
+http://localhost:8004/v1/report - get request to retrieve report
 
 Features (Basic functionality++):
 
