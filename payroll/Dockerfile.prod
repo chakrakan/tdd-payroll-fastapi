@@ -34,8 +34,8 @@ RUN pip install pipenv
 # Copy pipenv files
 COPY Pipfile Pipfile.lock ${APP_HOME}
 
-# install dependencies
-RUN pipenv install --system --deploy --ignore-pipfile
+# sync dependencies
+RUN pipenv sync --system --pre 
 
 # add app
 COPY . .

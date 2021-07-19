@@ -25,8 +25,8 @@ RUN pip install pipenv
 # Copy pipenv files
 COPY Pipfile Pipfile.lock ${WORK_DIR}
 
-# install dependencies
-RUN pipenv install --system --deploy --ignore-pipfile --dev
+# sync dependencies
+RUN pipenv sync --system --dev --pre
 
 # grab everything from payroll folder and push to container's payroll folder
 COPY . .
