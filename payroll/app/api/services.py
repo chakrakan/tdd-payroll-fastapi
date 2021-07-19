@@ -16,6 +16,7 @@ from tortoise.functions import Sum
 
 FILE_EXT = {".csv"}
 NAMING_CONVENTION = re.compile("time-report-\\d+$")
+MAX_WORK_HR_PER_EMP = 12
 
 
 async def process_file(uploaded_file: UploadFile, file_id: int):
@@ -114,6 +115,18 @@ async def get_employee_report(emp_id: int) -> List:
     return employee_reports
 
 
+async def check_work_hrs(emp_id: int) -> List:
+    work_hrs = (
+        await TimeReport.annotate(sum=Sum("hours_worked"))
+        .group_by("employee_id", "date")
+        .filter(employee_id=emp_id)
+        .order_by("date")
+        .values_list("employee_id", "date", "sum")
+    )
+
+    return work_hrs
+
+
 async def parse_date(date_string: str):
     for fmt in ("%Y-%m-%d", "%d/%m/%Y"):
         try:
@@ -141,24 +154,35 @@ async def generate_report_service() -> tuple:
         print(f"DB has {num_employees} employees, gathering reports, please wait...")
         if num_employees > 0:
             employee_reports = []
+            employee_hrs = []
             for employee in total_employees:
                 # get report and store
                 employee_reports.extend(await get_employee_report(employee.pk))
+                employee_hrs.extend(await check_work_hrs(employee.pk))
 
-            # iterate over reports and create json obj
-            for report in employee_reports:
-                report_obj = {
-                    "employeeId": str(report[0]),
-                    "payPeriod": {
-                        "startDate": report[1].strftime("%d/%m/%Y"),
-                        "endDate": report[2].strftime("%d/%m/%Y"),
-                    },
-                    "amountPaid": f"${report[3]:.2f}",
-                }
-                # append to main JSON response
-                REPORT["payrollReport"]["employeeReports"].append(report_obj)
+            for wrk_hrs in employee_hrs:
+                if wrk_hrs[2] > 12.00:
+                    ERRORS["INVALID_DATA"] = (
+                        f"Error: Employee {wrk_hrs[0]} is overworked. "
+                        f"A single Employee can work a maximum of 12 hrs/day. "
+                    )
+                    break
 
-            print("Report Generated!")
+            # iterate over reports and create json obj only if valid work hrs
+            if len(ERRORS) == 0:
+                for report in employee_reports:
+                    report_obj = {
+                        "employeeId": str(report[0]),
+                        "payPeriod": {
+                            "startDate": report[1].strftime("%Y-%m-%d"),
+                            "endDate": report[2].strftime("%Y-%m-%d"),
+                        },
+                        "amountPaid": f"${report[3]:.2f}",
+                    }
+                    # append to main JSON response
+                    REPORT["payrollReport"]["employeeReports"].append(report_obj)
+
+                print("Report Generated!")
         else:
             ERRORS["NO_DATA"] = (
                 "Error: There is no data in the database. "
