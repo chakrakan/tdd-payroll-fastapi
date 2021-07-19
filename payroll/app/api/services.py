@@ -145,6 +145,7 @@ async def generate_report_service() -> tuple:
                 # get report and store
                 employee_reports.extend(await get_employee_report(employee.pk))
 
+            # iterate over reports and create json obj
             for report in employee_reports:
                 report_obj = {
                     "employeeId": str(report[0]),
