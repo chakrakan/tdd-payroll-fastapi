@@ -21,7 +21,13 @@ MAX_WORK_HR_PER_EMP = 12
 
 async def process_file(uploaded_file: UploadFile, file_id: int):
     """
-    Main file processing handler
+    Main file processing handler.
+    O(3N) -> O(N) runtime based on size of file.
+    Bulk creates DB items.
+    Reads a SpooledTemporaryFile which automatically gets written to
+    tmp/ if a size is specified or if fileno() is triggered.
+    Also, this function is passed into FastAPIs BackgroundTasks which will
+    parallelize processing across specified number of workers (4)
 
     Args:
         csv_file (SpooledTemporaryFile): [description]
@@ -104,6 +110,17 @@ async def process_file(uploaded_file: UploadFile, file_id: int):
 
 
 async def get_employee_report(emp_id: int) -> List:
+    """
+    Performs a Sum aggregate on `amount_paid` followed by
+    group-by/order-by operation to get values processed from PgSQL.
+    Search with filter is O(logn) worst case.
+
+    Args:
+        emp_id (int): [emp id]
+
+    Returns:
+        List: [List of Employee report data for emp_id]
+    """
     employee_reports = (
         await EmployeeReport.annotate(sum=Sum("amount_paid"))
         .filter(report_employee_id=emp_id)
@@ -116,6 +133,23 @@ async def get_employee_report(emp_id: int) -> List:
 
 
 async def check_work_hrs(emp_id: int) -> List:
+    """
+    Extra function does a Sum on `hours_worked` to check
+    edge case where two files with different IDs may contain the SAME
+    values resulting in a particular employee's hours worked to be unrealistic
+    (over 24 etc.)
+
+    I've set a hard limit for 12 hrs/day for an employee that is tested during
+    report generation based on the sample `time-report-42.csv` file which has
+    a max value of 12 for hours work in a single day.
+
+
+    Args:
+        emp_id (int): [employee id]
+
+    Returns:
+        List: [description]
+    """
     work_hrs = (
         await TimeReport.annotate(sum=Sum("hours_worked"))
         .group_by("employee_id", "date")
@@ -128,6 +162,17 @@ async def check_work_hrs(emp_id: int) -> List:
 
 
 async def parse_date(date_string: str):
+    """`time-report-42.csv` contains dates as `dd/mm/YYYY` however,
+    in the next example in the docs, another example is given with
+    `YYYY-mm-dd` format. Hence, a slight helper function to check
+    the correct format and map for proper datetime generation.
+
+    Args:
+        date_string (str): [date]
+
+    Raises:
+        ValueError: [description]
+    """
     for fmt in ("%Y-%m-%d", "%d/%m/%Y"):
         try:
             return datetime.strptime(date_string, fmt)
@@ -141,8 +186,11 @@ async def generate_report_service() -> tuple:
     Report generator handler, can be extended in the future
     if the GET request supports time_periods to limit querying entire DB
 
+    O(N+2M+2K), worst case O(max(N,M,K)) or reduced to O(N)
+
     Returns:
-        dict: [description]
+        tuple: [contains the report if successfully generated as the first arg,
+        and errors encountered during processing in the 2nd]
     """
     ERRORS = {}
     REPORT = {"payrollReport": {"employeeReports": []}}
@@ -155,11 +203,14 @@ async def generate_report_service() -> tuple:
         if num_employees > 0:
             employee_reports = []
             employee_hrs = []
+
+            # O(N+M+K) where N is number of employees, M reports, K hours
             for employee in total_employees:
                 # get report and store
                 employee_reports.extend(await get_employee_report(employee.pk))
                 employee_hrs.extend(await check_work_hrs(employee.pk))
 
+            # O(K) worst case if not broken out
             for wrk_hrs in employee_hrs:
                 if wrk_hrs[2] > 12.00:
                     ERRORS["INVALID_DATA"] = (
@@ -170,6 +221,7 @@ async def generate_report_service() -> tuple:
 
             # iterate over reports and create json obj only if valid work hrs
             if len(ERRORS) == 0:
+                # O(M)
                 for report in employee_reports:
                     report_obj = {
                         "employeeId": str(report[0]),
@@ -196,7 +248,7 @@ async def generate_report_service() -> tuple:
 
 
 async def get_job_group(group_name: str) -> JobGroup:
-    """To demonstrate job_group modularity
+    """Get or create a job group in the DB from CSV
 
     Args:
         group_name (str): [job group char]
@@ -215,7 +267,7 @@ async def get_job_group(group_name: str) -> JobGroup:
 
 
 async def get_employee(employee_id: int, job_group: str) -> Employee:
-    """To demonstrate employee modularity
+    """Get or create employee in DB from CSV
 
     Args:
         employee_id (int): [employee id]
@@ -235,10 +287,10 @@ async def validate_file(file_with_ext: str, content_type: str) -> tuple:
 
     Args:
         file_with_ext (str): [description]
-        content_type (str): [description]
+        content_type (str): [file mime type]
 
     Returns:
-        int: [description]
+        tuple: [integer file_id and ERRORS that happened during processing]
     """
 
     ERRORS = {}

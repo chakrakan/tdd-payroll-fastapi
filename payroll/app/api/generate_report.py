@@ -4,8 +4,6 @@
 from fastapi import APIRouter, status, Response
 from app.api.services import generate_report_service
 
-# from app.models.pydantic import ResponseSchema
-
 
 router = APIRouter()
 
@@ -20,6 +18,9 @@ async def generate_report(response: Response):
     """
     Endpoint to retrieve and generate a report for all employees and for all
     time periods uploaded thus far to the system.
+    If attempted to generate prior to uploading any CSVs return 404 code.
+    Otherwise, if attempting to upload duplicate data with different file naming
+    then return 409 conflict if a particular worker goes over 12hrs/day of work hours.
 
     Returns:
         [type]: [description]
