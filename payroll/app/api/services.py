@@ -243,6 +243,11 @@ async def generate_report_service() -> tuple:
             )
     except Exception as e:
         print(f"Error generating generate_report_service: {e}")
+        ERRORS["NO_DATA"] = (
+            "Error: There is no data in the database. "
+            "Please make sure you upload a time report first via "
+            "the APIs `/v1/upload` endpoint!"
+        )
 
     return (REPORT, ERRORS)
 

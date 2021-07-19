@@ -4,6 +4,19 @@ A sample payroll processing application built using FastAPI
 
 ## 1. Instructions on how to build/run your application
 
+#### Deployed Instance
+
+This API and PostgresDB is deployed on a free Heroku dyno - visit [`https://cryptic-peak-99939.herokuapp.com/docs`] to interact with the API directly from the Swagger UI specs without installing anything locally!
+
+`P.S. free Dyno's are by default asleep after 30 mins of inactivity and will require a cold start for the first request, so I highly suggest visiting the docs page first to "boot" up the dyno before hitting the other endpoints`
+
+Routes
+
+`https://cryptic-peak-99939.herokuapp.com/docs` - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
+`https://cryptic-peak-99939.herokuapp.com/v1/health` - simple `GET` endpoint for health check  
+`https://cryptic-peak-99939.herokuapp.com/v1/upload` - csv_file `POST` upload route  
+`https://cryptic-peak-99939.herokuapp.com/v1/report` - `GET` request to retrieve report of all uploaded data
+
 #### 🐳 Docker
 
 This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine.
