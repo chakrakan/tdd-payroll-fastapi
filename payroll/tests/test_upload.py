@@ -17,12 +17,15 @@ def test_file_upload_valid(test_app_with_db, change_test_dir):
     )
 
     json_response = response.json()
-    print(json_response)
 
     # Then
-    assert response.status_code == 202
+    assert response.status_code in (202, 409)
     assert json_response["file_id"] == 2
-    assert "Accepted" in json_response["message"]
+    assert (
+        "Accepted" in json_response["message"]
+        if type(json_response["message"]) is not dict
+        else "DUPLICATE_REPORT" in json_response["message"].keys()
+    )
 
 
 def test_file_upload_invalid_name(test_app, change_test_dir):
