@@ -15,14 +15,13 @@ The API is referred as `payroll` and the PgSQL DB is `payroll-db` with tables `p
 3. Run `docker-compose up -d --build` to build the images and containers
 4. Once the containers are up and running, upgrade DB to provided aerich migrations using `docker-compose exec payroll aerich upgrade`
 5. You can check `docker-compose exec payroll-db psql -U postgres` followed by `\c payroll_dev` and then `\dt` to ensure the tables have been created
-6. Feel free to test out the endpoints using your method of choice (Postman/Insomnia/cURL etc.) and ensure that the form body file key is called `csv_file` since that's what the app looks for.
+6. Feel free to test out the endpoints using your method of choice (Postman/Insomnia/cURL etc.) or you can directly use Swagger UI at `http://localhost:8004/docs` to test out the entire API visually!
 
 Routes
 
-`http://localhost:8004/docs` - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!
-
-`http://localhost:8004/v1/health` - simple health check
-`http://localhost:8004/v1/upload` - csv_file post upload route
+`http://localhost:8004/docs` - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
+`http://localhost:8004/v1/health` - simple health check  
+`http://localhost:8004/v1/upload` - csv_file post upload route  
 `http://localhost:8004/v1/report` - get request to retrieve report
 
 Features (Basic functionality++):
