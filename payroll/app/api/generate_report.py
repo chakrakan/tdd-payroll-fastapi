@@ -1,9 +1,10 @@
 # payroll/app/api/generate_report.py
 
 
-from fastapi import APIRouter, status, BackgroundTasks
-
+from fastapi import APIRouter, status, Response
 from app.api.services import generate_report_service
+
+# from app.models.pydantic import ResponseSchema
 
 
 router = APIRouter()
@@ -15,7 +16,7 @@ router = APIRouter()
     tags=["Generate Report"],
     description="Route to retrieve JSON data for all TimeReport data uploaded",
 )
-async def generate_report(background_task: BackgroundTasks):
+async def generate_report(response: Response):
     """
     Endpoint to retrieve and generate a report for all employees and for all
     time periods uploaded thus far to the system.
@@ -23,6 +24,11 @@ async def generate_report(background_task: BackgroundTasks):
     Returns:
         [type]: [description]
     """
-    message = "Report Generated!"
-    background_task.add_task(generate_report_service)
+    (REPORT, ERRORS) = await generate_report_service()
+    message = REPORT
+    if len(ERRORS) > 0:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        # message in our UploadReponseSchema is a Union of dict and str so we can simply
+        # pass ERRORS dict
+        message = ERRORS
     return message

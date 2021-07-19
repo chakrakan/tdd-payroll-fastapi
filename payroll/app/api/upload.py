@@ -41,6 +41,6 @@ async def upload_report(
         # pass ERRORS dict
         message = ERRORS
     else:
-        background_tasks.add_task(process_file, csv_file)
+        background_tasks.add_task(process_file, csv_file, file_id)
 
     return {"file_id": file_id, "message": message}

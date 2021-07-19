@@ -21,6 +21,17 @@ class UploadResponseSchema(BaseModel):
     message: Union[str, dict]
 
 
+# class ResponseSchema(BaseModel):
+#     """
+#     UploadResponseSchema base model
+
+#     Args:
+#         BaseModel ([type]): [description]
+#     """
+
+#     payrollReport: Json
+
+
 # create pydantic schemas with tortoise ORM helper
 # EmployeeSchema = pydantic_model_creator(Employee, name="Employee")
 # JobGroupSchema = pydantic_model_creator(JobGroup, name="JobGroup")
