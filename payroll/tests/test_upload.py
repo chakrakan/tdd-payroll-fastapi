@@ -43,7 +43,28 @@ def test_file_upload_invalid_name(test_app, change_test_dir):
     # Then
     assert response.status_code == 409
     assert json_response["file_id"] == 0
-    assert "INVALID_NAME" in json_response["message"].keys()
+
+
+def test_file_upload_valid_empty(test_app_with_db, change_test_dir):
+    # Given
+    change_test_dir
+    filename = "time-report-43.csv"
+
+    # When
+    response = test_app_with_db.post(
+        "v1/upload", files={"csv_file": (filename, open(filename, "rb"), "text/csv")}
+    )
+
+    json_response = response.json()
+
+    # Then
+    assert response.status_code == 202
+    assert json_response["file_id"] == 43
+    assert (
+        "Accepted" in json_response["message"]
+        if type(json_response["message"]) is not dict
+        else "DUPLICATE_REPORT" in json_response["message"].keys()
+    )
 
 
 def test_file_upload_invalid_type(test_app, change_test_dir):
