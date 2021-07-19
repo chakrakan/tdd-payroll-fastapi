@@ -106,8 +106,8 @@ async def process_file(uploaded_file: UploadFile, file_id: int):
 async def get_employee_report(emp_id: int) -> List:
     employee_reports = (
         await EmployeeReport.annotate(sum=Sum("amount_paid"))
-        .group_by("report_employee_id", "start_date", "end_date")
         .filter(report_employee_id=emp_id)
+        .group_by("report_employee_id", "start_date", "end_date")
         .order_by("start_date")
         .values_list("report_employee_id", "start_date", "end_date", "sum")
     )
