@@ -2,8 +2,6 @@
 
 ![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 
-
-
 A sample payroll processing application built using FastAPI to demonstrate my skills for production/near production!
 Feedback is welcome and you can provide them by directlly creating [gh-issues](https://github.com/chakrakan/tdd-payroll-fastapi/issues) on the repo
 
@@ -76,7 +74,7 @@ Features (Basic functionality++):
   Happy to receive feedback to further learn more about ways to optimize my solution for the challenge! 😊
 
 - **What compromises did you have to make as a result of the time constraints of this challenge?**  
-  **A.** I'm quite happy with the implementation I have made within the time constraints! If I didn't have other interviews/obligations, I'd probably write more tests and figure out the async pytest integration to test out the services individually. add Celery and Dask to the project. However, for the purposes, I didn't want to over-engineer the solution as I quite like the philoshopy at Wave where we try to write robust code without introducing technical debt, but at the same time, iterate and continuosly make things better!
+   **A.** I'm quite happy with the implementation I have made within the time constraints! If I didn't have other interviews/obligations, I'd probably write more tests and figure out the async pytest integration to test out the services individually. add Celery and Dask to the project. However, for the purposes, I didn't want to over-engineer the solution as I quite like the philoshopy at Wave where we try to write robust code without introducing technical debt, but at the same time, iterate and continuosly make things better!
 
   This was a great learning experience for me as well since I have not worked with FastAPI and its underlying eco-system (Tortoise-ORM, aerich etc.) and it was great to go through all the documentation and resources to put together something in a few hours over the weekend!
 
@@ -85,3 +83,57 @@ Features (Basic functionality++):
   Thank you for the opportunity!
 
   -- [Kanisk](https://kanisk.live/)
+
+### Miscellaneous
+
+#### Folder structure
+
+Command: `tree -I '__pycache__|htmlcov|*.csv'`
+
+```bash
+.
+├── README.md
+├── docker-compose.yml
+├── docs
+│   └── coverage.png
+├── payroll
+│   ├── Dockerfile
+│   ├── Dockerfile.prod
+│   ├── Pipfile
+│   ├── Pipfile.lock
+│   ├── aerich.ini
+│   ├── app
+│   │   ├── __init__.py
+│   │   ├── api
+│   │   │   ├── __init__.py
+│   │   │   ├── generate_report.py
+│   │   │   ├── health_check.py
+│   │   │   ├── services.py
+│   │   │   └── upload.py
+│   │   ├── config.py
+│   │   ├── db.py
+│   │   ├── main.py
+│   │   └── models
+│   │       ├── __init__.py
+│   │       ├── pydantic.py
+│   │       └── tortoise.py
+│   ├── db
+│   │   ├── Dockerfile
+│   │   └── create.sql
+│   ├── entrypoint.sh
+│   ├── migrations
+│   │   └── models
+│   │       └── 0_20210719154333_init.sql
+│   ├── requirements-dev.txt
+│   ├── requirements.txt
+│   ├── setup.cfg
+│   └── tests
+│       ├── __init__.py
+│       ├── conftest.py
+│       ├── test_api_services.py
+│       ├── test_generate_report.py
+│       ├── test_health.py
+│       ├── test_upload.py
+│       └── wave-logo.png
+└── release.sh
+```
