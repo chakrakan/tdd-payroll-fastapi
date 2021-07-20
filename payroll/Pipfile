@@ -14,9 +14,9 @@ requests = "*"
 python-multipart = "*"
 python-magic = "*"
 gunicorn = "*"
+pytest-cov = "*"
+isort = "*"
 
 [dev-packages]
 flake8 = "*"
 black = "*"
-
-

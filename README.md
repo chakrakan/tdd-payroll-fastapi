@@ -30,6 +30,11 @@ The API is referred as `payroll` and the PgSQL DB is `payroll-db` with tables `p
 5. You can check `docker-compose exec payroll-db psql -U postgres` followed by `\c payroll_dev` and then `\dt` to ensure the tables have been created
 6. Feel free to test out the endpoints using your method of choice (Postman/Insomnia/cURL etc.) or you can directly use Swagger UI at `http://localhost:8004/docs` to test out the entire API visually!
 
+Additional Commands:
+
+Lint code: `docker-compose exec payroll flake8 .`
+Format code: `docker-compose exec payroll black . --check`
+
 Routes
 
 http://localhost:8004/docs - to access auto-generated OpenAPI 3 docs to test out below endpoints without a Front-end interface!  
