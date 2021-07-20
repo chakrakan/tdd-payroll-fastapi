@@ -1,6 +1,7 @@
 # Payroll System
 
-![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+
 
 
 A sample payroll processing application built using FastAPI to demonstrate my skills for production/near production!
