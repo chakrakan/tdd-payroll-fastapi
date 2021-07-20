@@ -25,7 +25,7 @@ https://cryptic-peak-99939.herokuapp.com/v1/report - `GET` request to retrieve r
 
 #### 🐳 Docker
 
-This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine. 
+This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine.
 
 You can always clone the repo, make a virtualenv manually and `pip install -r requirements-dev.txt` to install dev+main deps and run the project via a direct call to `uvicorn app.main:app --reload --workers 4 --host 0.0.0.0 --port 8000` from the `payroll/` folder, but that's far less exciting 😆
 
@@ -94,7 +94,7 @@ Features (Basic functionality++):
 
 #### Folder structure
 
-Command: `tree -I '__pycache__|htmlcov|*.csv'`
+`tree -I '__pycache__|htmlcov|*.csv'`
 
 ```bash
 .
