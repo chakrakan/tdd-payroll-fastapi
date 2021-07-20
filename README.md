@@ -75,16 +75,16 @@ Features (Basic functionality++):
 
   I'd also change the CORS policy to better adhere and restrict access to the endpoints as necessary instead of allowing all.
 
-  Also, most definitley have a CI/CD pipeline that runs the tests in a test env, does security scanning of containers + have a proper branching setup (dev, main, features, bug branches etc.) with rules for PR reviews/merge conditions prior to production deployments.
+  While there is a CI/CD pipeline that runs the tests in a test env, I'd also add does security scanning of containers/dependecies for prod + have a proper branching setup (dev, main, features, bug branches etc.) with rules for PR reviews/merge conditions prior to production deployments.
 
-  Happy to receive feedback to further learn more about ways to optimize my solution for the challenge! 😊
+  Happy to receive additional feedback to further learn more about ways to optimize my solution for the challenge and for prod! 😊
 
 - **What compromises did you have to make as a result of the time constraints of this challenge?**  
-   **A.** I'm quite happy with the implementation I have made within the time constraints! If I didn't have other interviews/obligations, I'd probably write more tests and figure out the async pytest integration to test out the services individually. add Celery and Dask to the project. However, for the purposes, I didn't want to over-engineer the solution as I quite like the philoshopy at Wave where we try to write robust code without introducing technical debt, but at the same time, iterate and continuosly make things better!
+   **A.** I'm quite happy with the implementation I have made within the time constraints! If I didn't have other interviews/obligations, I'd probably write more tests and figure out the async pytest integration to test out the services individually. add Celery and Dask to the project. However, for the purposes, I didn't want to over-engineer the solution as I like the philoshopy at Wave where we try to write robust code without introducing technical debt, but at the same time, iterate and continuosly make things better!
 
-  This was a great learning experience for me as well since I have not worked with FastAPI and its underlying eco-system (Tortoise-ORM, aerich etc.) and it was great to go through all the documentation and resources to put together something in a few hours over the weekend!
+  I know I did not have to do all the setups/configs for this project to the level I did, but I wanted to use this not just to do ANOTHER take home project, but also leverage this as a great learning experience for me as well, since I've never worked with FastAPI and its underlying eco-system (Tortoise-ORM, aerich etc.) and also am a bit rusty with my Python and any new features since (last used 3.7 or so). All in all, it was extremely fun to through all the documentation and resources to put together, time spent debugging code, and put something together in a few hours over the weekend!
 
-  If you'd like to see my full thought-process, feel free to dive into the [Wiki!](https://github.com/chakrakan/tdd-payroll-fastapi/wiki)
+  If you'd like to see my full thought-process, feel free to dive further into the [Wiki!](https://github.com/chakrakan/tdd-payroll-fastapi/wiki)
 
   Thank you for the opportunity!
 
