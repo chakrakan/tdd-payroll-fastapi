@@ -5,7 +5,8 @@
 
 
 A sample payroll processing application built using FastAPI to demonstrate my skills for production/near production!
-Feedback is welcome and you can provide them by directlly creating [gh-issues](https://github.com/chakrakan/tdd-payroll-fastapi/issues) on the repo
+
+Feedback is welcome and you can provide them by directlly creating [gh-issues](https://github.com/chakrakan/tdd-payroll-fastapi/issues) on the repo.
 
 ## 1. Instructions on how to build/run your application
 
@@ -13,7 +14,9 @@ Feedback is welcome and you can provide them by directlly creating [gh-issues](h
 
 This API and PostgresDB is deployed on a free Heroku dyno - visit [here](https://cryptic-peak-99939.herokuapp.com/docs) to interact with the API directly from the Swagger UI specs without installing anything locally!
 
-`P.S. free Dyno's are by default asleep after 30 mins of inactivity and will require a cold start for the first request, so I highly suggest visiting the docs page first to "boot" up the dyno before hitting the other endpoints`
+```text
+P.S. free Dyno's are by default asleep after 30 mins of inactivity and will require a cold start for the first request, so I highly suggest visiting the docs page first to "boot" up the dyno before hitting the other endpoints
+```
 
 Routes
 
@@ -24,9 +27,11 @@ https://cryptic-peak-99939.herokuapp.com/v1/report - `GET` request to retrieve r
 
 #### 🐳 Docker
 
-This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine.
+This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine. 
 
-The API is referred as `payroll` and the PgSQL DB is `payroll-db` with tables `payroll_dev` and `payroll_test`
+You can always clone the repo, make a virtualenv manually and `pip install -r requirements-dev.txt` to install dev+main deps and run the project via a direct call to `uvicorn app.main:app --reload --workers 4 --host 0.0.0.0 --port 8000` from the `payroll/` folder, but that's far less exciting 😆
+
+The API container is referred as `payroll` and the PgSQL DB container is `payroll-db` with tables `payroll_dev` and `payroll_test`
 
 1. Clone the repository locally
 2. `cd` to the root of the project where `docker-compose.yml` resides
@@ -37,8 +42,9 @@ The API is referred as `payroll` and the PgSQL DB is `payroll-db` with tables `p
 
 Additional Commands:
 
-Lint code: `docker-compose exec payroll flake8 .`
-Format code: `docker-compose exec payroll black . --check`
+Lint code: `docker-compose exec payroll python -m flake8 .`
+Format code-check: `docker-compose exec payroll python -m black . --check`
+Sort dependencies: `docker-compose exec payroll python -m isort .`
 
 Routes
 
