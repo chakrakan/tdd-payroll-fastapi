@@ -1,7 +1,6 @@
 # payroll/app/api/upload.py
 
-from fastapi import (APIRouter, BackgroundTasks, File, Response, UploadFile,
-                     status)
+from fastapi import APIRouter, BackgroundTasks, File, Response, UploadFile, status
 
 from app.api.services import process_file, validate_file
 from app.models.pydantic import UploadResponseSchema
