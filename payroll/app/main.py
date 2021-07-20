@@ -1,9 +1,11 @@
 # payroll/app/main.py
 
 import logging
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import health_check, upload, generate_report
+
+from app.api import generate_report, health_check, upload
 from app.db import init_db
 
 log = logging.getLogger("uvicorn")

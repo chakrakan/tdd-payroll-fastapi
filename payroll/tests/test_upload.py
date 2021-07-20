@@ -2,7 +2,6 @@
 
 import magic
 
-
 mime = magic.Magic(mime=True)
 
 

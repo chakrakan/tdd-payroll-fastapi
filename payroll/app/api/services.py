@@ -1,16 +1,16 @@
 # payroll/app/api/crud.py
 
-from decimal import Decimal
-import re
-from os.path import splitext
-from datetime import datetime
-
-from typing import List
-from fastapi.datastructures import UploadFile
 import calendar
+import re
+from datetime import datetime
+from decimal import Decimal
+from os.path import splitext
+from typing import List
+
+from fastapi.datastructures import UploadFile
+from tortoise.functions import Sum
 
 from app.models.tortoise import Employee, EmployeeReport, JobGroup, TimeReport
-from tortoise.functions import Sum
 
 # extendable file types and const naming convention
 

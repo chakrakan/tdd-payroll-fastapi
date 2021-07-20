@@ -1,7 +1,8 @@
 # payroll/app/models/pydantic.py
 
-from pydantic.main import BaseModel
 from typing import Union
+
+from pydantic.main import BaseModel
 
 
 class UploadResponseSchema(BaseModel):

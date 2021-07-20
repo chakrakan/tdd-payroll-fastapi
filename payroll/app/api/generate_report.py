@@ -1,9 +1,9 @@
 # payroll/app/api/generate_report.py
 
 
-from fastapi import APIRouter, status, Response
-from app.api.services import generate_report_service
+from fastapi import APIRouter, Response, status
 
+from app.api.services import generate_report_service
 
 router = APIRouter()
 
