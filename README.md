@@ -2,7 +2,8 @@
 
 ![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main)
 
-A sample payroll processing application built using FastAPI
+A sample payroll processing application built using FastAPI to demonstrate my skills for production/near production!
+Feedback is welcome and you can provide them by directlly creating [gh-issues](https://github.com/chakrakan/tdd-payroll-fastapi/issues) on the repo
 
 ## 1. Instructions on how to build/run your application
 
