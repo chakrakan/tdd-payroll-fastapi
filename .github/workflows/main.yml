@@ -85,7 +85,7 @@ jobs:
       - name: Black
         run: docker exec tdd-payroll-fastapi python -m black . --check
       - name: isort
-        run: docker exec tdd-payroll-fastapi python -m isort . --check-only
+        run: docker exec tdd-payroll-fastapi python -m isort --profile black . --check-only
 
   deploy:
     name: Deploy to Heroku

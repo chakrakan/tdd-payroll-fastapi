@@ -28,7 +28,7 @@ COPY . /usr/src/app/
 RUN pip install black==21.6b0 flake8==3.9.2 isort==5.9.1
 RUN flake8 .
 RUN black --exclude=migrations .
-RUN isort .
+RUN isort --profile black .
 
 
 #########
