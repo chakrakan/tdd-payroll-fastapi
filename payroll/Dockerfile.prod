@@ -1,15 +1,15 @@
 # pull official base image
 FROM python:3.8.11-slim-buster
 
-# create directory for the app user
-RUN mkdir -p /home/app
-
 # create the app user
 RUN addgroup --system app && adduser --system --group app
 
+# create directory for the app user
+RUN mkdir -p /home/app
+
 # create the appropriate directories
 ENV HOME=/home/app
-ENV APP_HOME=/home/app/payroll
+ENV APP_HOME=/home/app/payroll/
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
