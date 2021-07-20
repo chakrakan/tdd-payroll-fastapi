@@ -93,7 +93,7 @@ jobs:
     needs: [build, test]
     env:
       HEROKU_APP_NAME: cryptic-peak-99939
-      HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/web
+      HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/tdd-payroll-fastapi
     steps:
       - name: Checkout master
         uses: actions/checkout@v2.3.4
