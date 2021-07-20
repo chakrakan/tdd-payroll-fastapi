@@ -1,6 +1,7 @@
 # Payroll System
 
-![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main)
+![Continuous Integration and Delivery](https://github.com/chakrakan/tdd-payroll-fastapi/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=main) | [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 
 A sample payroll processing application built using FastAPI to demonstrate my skills for production/near production!
 Feedback is welcome and you can provide them by directlly creating [gh-issues](https://github.com/chakrakan/tdd-payroll-fastapi/issues) on the repo
