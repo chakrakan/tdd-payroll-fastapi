@@ -5,7 +5,7 @@ import re
 from datetime import datetime
 from decimal import Decimal
 from os.path import splitext
-from typing import List
+from typing import List, Optional, Tuple
 
 from fastapi.datastructures import UploadFile
 from tortoise.functions import Sum
@@ -132,7 +132,7 @@ async def get_employee_report(emp_id: int) -> List:
     return employee_reports
 
 
-async def check_work_hrs(emp_id: int) -> List:
+async def check_work_hrs(emp_id: int) -> Optional[list]:
     """
     Extra function does a Sum on `hours_worked` to check
     edge case where two files with different IDs may contain the SAME
@@ -148,17 +148,22 @@ async def check_work_hrs(emp_id: int) -> List:
         emp_id (int): [employee id]
 
     Returns:
-        List: [description]
+        Optional[list]: [contains the tuple of requested data]
     """
-    work_hrs = (
-        await TimeReport.annotate(sum=Sum("hours_worked"))
-        .group_by("employee_id", "date")
-        .filter(employee_id=emp_id)
-        .order_by("date")
-        .values_list("employee_id", "date", "sum")
-    )
+    try:
+        over_worked_data = (
+            await TimeReport.annotate(total_hours_per_day=Sum("hours_worked"))
+            .group_by("employee_id", "date")
+            .filter(employee_id=emp_id, total_hours_per_day__gt=12)
+            .first()
+            .values_list("employee_id", "date", "total_hours_per_day")
+        )
 
-    return work_hrs
+        if type(over_worked_data) == list and len(over_worked_data) > 0:
+            return over_worked_data[0]
+
+    except Exception as e:
+        print(f"Error in check_work_hrs: {e}")
 
 
 async def parse_date(date_string: str):
@@ -181,12 +186,12 @@ async def parse_date(date_string: str):
     raise ValueError("Error: no valid date format found")
 
 
-async def generate_report_service() -> tuple:
+async def generate_report_service() -> Tuple:
     """
     Report generator handler, can be extended in the future
     if the GET request supports time_periods to limit querying entire DB
 
-    O(N+2M+2K), worst case O(max(N,M,K)) or reduced to O(N)
+    O(N+M), worst case O(max(N,M)) or reduced to O(N)
 
     Returns:
         tuple: [contains the report if successfully generated as the first arg,
@@ -202,25 +207,21 @@ async def generate_report_service() -> tuple:
         print(f"DB has {num_employees} employees, gathering reports, please wait...")
         if num_employees > 0:
             employee_reports = []
-            employee_hrs = []
 
-            # O(N+M+K) where N is number of employees, M reports, K hours
+            # O(N+M) where N is number of employees, M reports
             for employee in total_employees:
                 # get report and store
                 employee_reports.extend(await get_employee_report(employee.pk))
-                employee_hrs.extend(await check_work_hrs(employee.pk))
-
-            # O(K) worst case if not broken out
-            for wrk_hrs in employee_hrs:
-                if wrk_hrs[2] > 12.00:
+                report_hrs = await check_work_hrs(employee.pk)
+                if report_hrs is not None:
                     ERRORS["INVALID_DATA"] = (
-                        f"Error: Employee {wrk_hrs[0]} is overworked. "
+                        f"Error: Employee {report_hrs[0]} is overworked. "
                         f"A single Employee can work a maximum of 12 hrs/day. "
                     )
                     break
 
             # iterate over reports and create json obj only if valid work hrs
-            if len(ERRORS) == 0:
+            if len(ERRORS) == 0 and len(employee_reports) > 0:
                 # O(M)
                 for report in employee_reports:
                     report_obj = {
@@ -243,11 +244,7 @@ async def generate_report_service() -> tuple:
             )
     except Exception as e:
         print(f"Error generating generate_report_service: {e}")
-        ERRORS["NO_DATA"] = (
-            "Error: There is no data in the database. "
-            "Please make sure you upload a time report first via "
-            "the APIs `/v1/upload` endpoint!"
-        )
+        ERRORS["INTERNAL_ERROR"] = "Error: Internal server error!"
 
     return (REPORT, ERRORS)
 

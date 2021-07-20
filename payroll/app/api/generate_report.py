@@ -25,14 +25,12 @@ async def generate_report(response: Response):
     Returns:
         [type]: [description]
     """
+    messages = {"NO_DATA": 404, "INTERNAL_ERROR": 500, "INVALID_DATA": 409}
     (REPORT, ERRORS) = await generate_report_service()
     message = REPORT
     if len(ERRORS) > 0:
-        response.status_code = (
-            status.HTTP_404_NOT_FOUND
-            if "NO_DATA" in ERRORS.keys()
-            else status.HTTP_409_CONFLICT
-        )
+        keys = list(ERRORS.keys())
+        response.status_code = messages[keys[0]]
         # message in our UploadReponseSchema is a Union of dict and str so we can simply
         # pass ERRORS dict
         message = ERRORS
