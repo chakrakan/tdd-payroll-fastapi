@@ -14,19 +14,15 @@ WORKDIR ${WORK_DIR}
 
 # install system dependencies
 RUN apt-get update \
-    && apt-get -y install netcat gcc \
+    && apt-get -y install netcat gcc postgresql \
     && apt-get -y install libmagic1 \
     && apt-get clean
 
 # install pipenv
 RUN pip install --upgrade pip
-RUN pip install pipenv
-
-# Copy pipenv files
-COPY Pipfile Pipfile.lock ${WORK_DIR}
-
-# sync dependencies
-RUN pipenv sync --system --dev --pre
+COPY ./requirements.txt .
+COPY ./requirements-dev.txt .
+RUN pip install -r requirements-dev.txt
 
 # grab everything from payroll folder and push to container's payroll folder
 COPY . .
