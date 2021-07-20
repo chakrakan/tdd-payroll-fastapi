@@ -67,7 +67,13 @@ Features (Basic functionality++):
   **A.** This API was built using TDD w/ `pytest` while leveraging Python (3.9+) features such as types and pythonic async-await. There were some nifty edge cases that I was able to circumvent due to this and add custom responses based on the scenario! You can run the tests using `docker-compose exec payroll python -m pytest`. Apart from that, I also tested the endpoints directly via Postman to ensure correct upload behavior/report generation.
 
 - **If this application was destined for a production environment, what would you add or change?**  
-  **A.** Lots more testing - specifically using asyncio pytest to test out my async methods within the api/services.py file. I'd also use an async task queue like Celery to better optimize large file uploads and processing in the background. Current implementation uses 4 uvicorn workers (feel free to increase this number by editing `uvicorn` workers to `2 * no. of CPU cores + 1` processes) to parallelly process the file in FastAPI's BackgroundTasks - a basic non-blocking Task queue implementation. The file itself is also chunked in memory as a SpooledTemporaryFile, where once the `fileno()` is triggered, it'll be automatically stored to the `tmp/` drive and read as needed. For production, I'd use something like a Dask dataframe to handle reading huge CSV files in memory-constrained cloud VMs which does most of these processes internally in one line of code 🤯
+  **A.** Lots more testing - specifically using asyncio pytest to test out my async methods within the api/services.py file since as you can see based on the codecov report:
+  <p align="center">
+   <img src="https://github.com/chakrakan/tdd-payroll-fastapi/blob/main/docs/coverage.png" width="400" alt="Codecov report" /></a>
+  </p>
+  I could've done better 😅
+  
+  I'd also use an async task queue like Celery to better optimize large file uploads and processing in the background. Current implementation uses 4 uvicorn workers (feel free to increase this number by editing `uvicorn` workers to `2 * no. of CPU cores + 1` processes) to parallelly process the file in FastAPI's BackgroundTasks - a basic non-blocking Task queue implementation. The file itself is also chunked in memory as a SpooledTemporaryFile, where once the `fileno()` is triggered, it'll be automatically stored to the `tmp/` drive and read as needed. For production, I'd use something like a Dask dataframe to handle reading huge CSV files in memory-constrained cloud VMs which does most of these processes internally in one line of code 🤯
 
   An async ORM, Tortoise-ORM is being leveraged with the `asyncpg` adapter for PostgreSQL to achieve [maximum performance](https://github.com/tortoise/orm-benchmarks#quick-analysis) for DB interactions.
 
