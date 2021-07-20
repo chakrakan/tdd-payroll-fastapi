@@ -25,11 +25,18 @@ https://cryptic-peak-99939.herokuapp.com/v1/report - `GET` request to retrieve r
 
 #### 🐳 Docker
 
-This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup is using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine.
+This app is fully Dockerized (API and DB for test, and dev), thus the fastest way to get setup locally is:
+- directly pulling the final image hosted as a package on Github: https://github.com/chakrakan/tdd-payroll-fastapi/packages/905453
+
+or 
+
+- using the `docker-compose.yml` file supplied. Ensure you have Docker and docker cli tools installed on your local machine
 
 You can always clone the repo, make a virtualenv manually and `pip install -r requirements-dev.txt` to install dev+main deps and run the project via a direct call to `uvicorn app.main:app --reload --workers 4 --host 0.0.0.0 --port 8000` from the `payroll/` folder, but that's far less exciting 😆
 
-The API container is referred as `payroll` and the PgSQL DB container is `payroll-db` with tables `payroll_dev` and `payroll_test`
+The API container is referred as `payroll` and the PgSQL DB container is `payroll-db` with tables `payroll_dev` and `payroll_test`.
+
+Steps for local docker method:
 
 1. Clone the repository locally
 2. `cd` to the root of the project where `docker-compose.yml` resides
