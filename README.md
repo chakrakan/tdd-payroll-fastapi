@@ -84,7 +84,7 @@ Features (Basic functionality++):
 
   An async ORM, Tortoise-ORM is being leveraged with the `asyncpg` adapter for PostgreSQL to achieve [maximum performance](https://github.com/tortoise/orm-benchmarks#quick-analysis) for DB interactions.
 
-  Almost all operations are at worst case O(N), with the most taxing job being O(N+M) which is the report generation, and is still linear.
+  Almost all operations within the code-base are at worst case O(N), with the most taxing jobs of filtering and searching being done in O(logN) time on the PgSQL DB, and the report generation being O(NM) due to `.extend` on the array, but can be optimized further to use a dictionary and made O(N+M) and can still be linear.
 
   I'd also change the CORS policy to better adhere and restrict access to the endpoints as necessary instead of allowing all.
 
